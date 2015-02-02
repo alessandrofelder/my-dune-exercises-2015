@@ -26,3 +26,67 @@
 	path = dune/dune-pdelab
 	url = http://git.dune-project.org/repositories/dune-pdelab
 	branch = releases/2.0
+[submodule "exercises/cpp-exercise1"]
+	path = exercises/cpp-exercise1
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/cpp-exercise1.git
+	branch = master
+[submodule "exercises/cpp-exercise1-sol"]
+	path = exercises/cpp-exercise1-sol
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/cpp-exercise1-sol.git
+	branch = master
+[submodule "exercises/cpp-exercise2"]
+	path = exercises/cpp-exercise2
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/cpp-exercise2.git
+	branch = master
+[submodule "exercises/cpp-exercise2-sol"]
+	path = exercises/cpp-exercise2-sol
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/cpp-exercise2-sol.git
+	branch = master
+[submodule "exercises/grid-exercise"]
+	path = exercises/grid-exercise
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/grid-exercise.git
+	branch = master
+[submodule "exercises/grid-exercise-sol"]
+	path = exercises/grid-exercise-sol
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/grid-exercise-sol.git
+	branch = master
+[submodule "exercises/pdelab-exercise1"]
+	path = exercises/pdelab-exercise1
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise1.git
+	branch = master
+[submodule "exercises/pdelab-exercise1-sol"]
+	path = exercises/pdelab-exercise1-sol
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise1-sol.git
+	branch = master
+[submodule "exercises/pdelab-exercise2"]
+	path = exercises/pdelab-exercise2
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise2.git
+	branch = master
+[submodule "exercises/pdelab-exercise2-sol"]
+	path = exercises/pdelab-exercise2-sol
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise2-sol.git
+	branch = master
+[submodule "exercises/pdelab-exercise3"]
+	path = exercises/pdelab-exercise3
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise3.git
+	branch = master
+[submodule "exercises/pdelab-exercise3-sol"]
+	path = exercises/pdelab-exercise3-sol
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise3-sol.git
+	branch = master
+[submodule "exercises/pdelab-exercise4"]
+	path = exercises/pdelab-exercise4
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise4.git
+	branch = master
+[submodule "exercises/pdelab-exercise4-sol"]
+	path = exercises/pdelab-exercise4-sol
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise4-sol.git
+	branch = master
+[submodule "exercises/pdelab-exercise5"]
+	path = exercises/pdelab-exercise5
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise5.git
+	branch = master
+[submodule "exercises/pdelab-exercise6"]
+	path = exercises/pdelab-exercise6
+	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise6.git
+	branch = master
