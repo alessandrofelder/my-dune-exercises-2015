@@ -100,7 +100,7 @@ pushd tarballs
 rm -rf ug-3.11.0
 tar xzf ug-3.11.0.tar.gz
 pushd ug-3.11.0
-( ./configure CC=$CXX --prefix=$INSTALL_HOME/ug CXXFLAGS="$CXXFLAGS" --enable-dune && make $MAKE_FLAGS && make install ) || exit $?
+( ./configure MPICC=$MPICC CC=$CXX --prefix=$INSTALL_HOME/ug CXXFLAGS="$CXXFLAGS" --enable-parallel --enable-dune && make $MAKE_FLAGS && make install ) || exit $?
 popd
 rm -rf ug-3.11.0
 popd
@@ -111,6 +111,7 @@ fi
 
 # generate an opts file
 echo "CMAKE_FLAGS=\"
+-DALBERTA_ROOT=$INSTALL_HOME/alberta
 -DALUGRID_ROOT=$INSTALL_HOME/alugrid
 -DUG_ROOT=$INSTALL_HOME/ug
 -DCMAKE_C_COMPILER=/usr/bin/gcc
@@ -124,5 +125,6 @@ echo "CMAKE_FLAGS=\"
 git submodule init
 git submodule update
 pushd dune
-./dune-common/bin/dunecontrol --use-cmake --opts=../config.opts --builddir=$ROOT/builddir --module=dune-pdelab all
+echo "Builddir: $ROOT"
+./dune-common/bin/dunecontrol --use-cmake --opts=../config.opts --module=dune-pdelab all
 popd
