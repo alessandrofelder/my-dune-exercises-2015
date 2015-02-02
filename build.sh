@@ -1,9 +1,32 @@
 #!/bin/bash
 
+# This script is used as a one touch build system for the Dune course 2015
+# held at IWR, University of Heidelberg. For more general documentation on
+# how to configure and install Dune, check www.dune-project.org
+
+# You can configure this script by setting the following environment variables:
+# See brackets for defaults.
+#
+# INSTALL_HOME the directory to install external packages in ($HOME/external)
+# F77 the fortran compiler (gfortran)
+# CC the C compiler (gcc)
+# MPICC the MPI compiler (mpicc)
+# CXX the C++ compiler (g++)
+# CXXFLAGS the standard C++ flags for external libraries ("-O3 -DNEBUG")
+# CFLAGS the standard C flags for external libraries (copy CXXFLAGS)
+# MAKE_FLAGS flags to be given to make during the build process ("-j2")
+#
+# You can disable some parts of this script by setting the variables NOBUILD_<part>,
+# where part is out of METIS, ALBERTA, ALU, UG or GRIDS (which is equivalent to the
+# former four).
+
+
+# set the proper defaults for variables which may be set from the outside.
 set -x
 set -e
+ROOT=$(pwd)
 if [ ! "$INSTALL_HOME" ]; then
-  INSTALL_HOME=$HOME/opt
+  INSTALL_HOME=$ROOT/external
 fi
 if [ ! "$F77" ]; then
   F77=gfortran
@@ -17,98 +40,89 @@ fi
 if [ ! "$CXX" ]; then
 CXX=g++
 fi
-
 if [ ! "$CXXFLAGS" ]; then
 CXXFLAGS="-O3 -DNDEBUG"
 fi
 CFLAGS="$CXXFLAGS"
+if [ ! "$MAKE_FLAGS" ]; then
+MAKE_FLAGS="-j2"
+fi
 
-#MAKE_FLAGS="-j 2"
 if [ ! $NOBUILD_GRIDS ]; then
 
-# compile and install metis
+## compile and install metis
 if [ ! $NOBUILD_METIS ]; then
-mkdir -p $INSTALL_HOME
-rm -rf metis-4.0
-tar xzf metis-4.0.tar.gz
-pushd metis-4.0
-sed "s/int\ log2(int)/int\ Log2(int)/" Lib/proto.h > tmp && mv tmp  Lib/proto.h 
-sed "s/int\ log2(int\ a)/int\ Log2(int\ a)/" Lib/util.c > tmp && mv tmp  Lib/util.c
-for i in kmetis.c kvmetis.c mkmetis.c; do
-  sed "s/log2(/Log2(/g" Lib/$i > tmp && mv tmp  Lib/$i
-done
-#sed "s/define\ log2/define\ Log2/g" Lib/rename.h > tmp && mv tmp  Lib/rename.h
-
-# patch for newer  compilers
-make 
+pushd $INSTALL_HOME
+pushd tarballs
+rm -rf metis-5.1.0
+tar xzf ./metis-5.1.0.tar.gz
+pushd metis-5.1.0
+(make config prefix=$INSTALL_HOME/metis && make $MAKE_FLAGS && make install) || exit $?
 popd
-rm -rf $INSTALL_HOME/metis-4.0
-mv metis-4.0 $INSTALL_HOME
-pushd $INSTALL_HOME/metis-4.0/Graphs
-#./mtest 4elt.graph
+rm -rf metis-5.1.0
+popd
 popd
 fi
 
-##
-##  ALBERTA
-##
+## compile and install alberta 3
 if [ ! $NOBUILD_ALBERTA ] ; then
-tar xzf alberta-2.0.1.tar.gz
-pushd alberta-2.0.1
-rm -rf $INSTALL_HOME/alberta
-( ./configure CC=$CC CXX=$CXX F77=$F77 CXXFLAGS="$CXXFLAGS" CFLAGS="$CFLAGS" --without-x --enable-shared=no --with-blas-name=blas --prefix=$INSTALL_HOME/alberta && make $MAKE_FLAGS clean install ) || exit $?
+pushd $INSTALL_HOME
+pushd tarballs
+rm -rf alberta-3.0.1
+tar xzf alberta-3.0.1.tar.gz
+pushd alberta-3.0.1
+( ./configure CC=$CC CXX=$CXX F77=$F77 CXXFLAGS="$CXXFLAGS" CFLAGS="$CFLAGS" --without-x --enable-shared=no --with-blas-name=blas --prefix=$INSTALL_HOME/alberta --disable-fem-toolbox && make $MAKE_FLAGS install ) || exit $?
+popd
+rm -rf alberta-3.0.1
+popd
 popd
 fi
 
-##
-## ALUGrid
-##
+## compile and install ALUGrid 1.52
 if [ ! $NOBUILD_ALU ] ; then
+pushd $INSTALL_HOME
+pushd tarballs
+rm -rf ALUGrid-1.52
 tar xzf ALUGrid-1.52.tar.gz
 pushd ALUGrid-1.52
-rm -rf $INSTALL_HOME/alugrid
-( ./configure CC=$CC CXX=$CXX F77=$F77 --prefix=$INSTALL_HOME/alugrid --with-metis=$INSTALL_HOME/metis-4.0 CPPFLAGS="$CPPFLAGS `../../dune-common*/bin/mpi-config --cflags --disable-cxx --mpicc=$MPICC`" LDFLAGS="$LDFLAGS `../../dune-common*/bin/mpi-config --libs --disable-cxx --mpicc=$MPICC`"
-CXXFLAGS="$CXXFLAGS"  CFLAGS="$CFLAGS" && make $MAKE_FLAGS clean install ) || exit $?
+( ./configure CC=$CC CXX=$CXX F77=$F77 --prefix=$INSTALL_HOME/alugrid --with-metis=$INSTALL_HOME/metis CPPFLAGS="$CPPFLAGS `../../dune-common*/bin/mpi-config --cflags --disable-cxx --mpicc=$MPICC`" LDFLAGS="$LDFLAGS `../../dune-common*/bin/mpi-config --libs --disable-cxx --mpicc=$MPICC`"
+CXXFLAGS="$CXXFLAGS"  CFLAGS="$CFLAGS" && make $MAKE_FLAGS install ) || exit $?
+popd
+rm -rf ALUGrid-1.52
+popd
 popd
 fi
+
+## compile and install UG 3.11
+if [ ! $NOBUILD_UG ] ; then
+pushd $INSTALL_HOME
+pushd tarballs
+rm -rf ug-3.11.0
+tar xzf ug-3.11.0.tar.gz
+pushd ug-3.11.0
+( ./configure CC=$CXX --prefix=$INSTALL_HOME/ug CXXFLAGS="$CXXFLAGS" --enable-dune && make $MAKE_FLAGS && make install ) || exit $?
+popd
+rm -rf ug-3.11.0
+popd
+popd
 fi
-## UG
-##
-tar xzf byacc.tar.gz
-#set +e
-pushd byacc-20090221
-make clean all
-#./configure CC=$CXX CXX=$CXX F77=$F77 --prefix=$INSTALL_HOME/bison && make $MAKE_FLAGS clean install > /dev/null 2>&1    #Fails but yacc is installed
+
+fi
+
+# generate an opts file
+echo "CMAKE_FLAGS=\"
+-DALUGRID_ROOT=$INSTALL_HOME/alugrid
+-DUG_ROOT=$INSTALL_HOME/ug
+-DCMAKE_C_COMPILER=/usr/bin/gcc
+-DCMAKE_CXX_COMPILER=/usr/bin/g++
+-DCMAKE_CXX_FLAGS_RELEASE='-O3 -DNDEBUG -g0 -Wno-deprecated-declarations -funroll-loops'
+-DCMAKE_CXX_FLAGS_DEBUG='-O0 -ggdb -Wall'
+-DCMAKE_BUILD_TYPE=Release
+\"" > config.opts
+
+# now build the Dune stack!
+git submodule init
+git submodule update
+pushd dune
+./dune-common/bin/dunecontrol --use-cmake --opts=../config.opts --builddir=$ROOT/builddir --module=dune-pdelab all
 popd
-
-tar xzf flex-2.5.35.tar.gz
-pushd flex-2.5.35
-./configure  --prefix $INSTALL_HOME && make install
-popd
-#set -e
-OPATH=$PATH
-export PATH=`pwd`/byacc-20090221:$INSTALL_HOME/bin:$PATH
-tar xvf UG.tar.gz
-pushd UG/ug
-( ./autogen.sh && ./configure CC=$CXX CXX=$CXX F77=$F77 --prefix=$INSTALL_HOME/ug-install --enable-dune CXXFLAGS="$CXXFLAGS" CFLAGS="$CFLAGS" && make $MAKE_FLAGS clean install ) || exit $?
-popd
-export PATH=$OPATH
-
-###
-### create DUNE opts file
-###
-echo "# use these options for configure if no options a provided on the cmdline
-CONFIGURE_FLAGS=\"--prefix=$INSTALL_HOME --disable-documentation --disable-mpiruntest --enable-parallel --enable-fieldvector-size-is-method --with-alugrid=$INSTALL_HOME/alugrid --with-alberta=$INSTALL_HOME/alberta --with-ug=$INSTALL_HOME/ug-install CXX=g++ CC=gcc CXXFLAGS=\\\"-O0 -g -Wall\\\" CFLAGS=\\\"-O0 -g -Wall\\\"\"
-MAKE_FLAGS=\"all\"
-" > parallel-debug.opts
-
-
-###
-echo "# use these options for configure if no options a provided on the cmdline
-CONFIGURE_FLAGS=\"--prefix=$INSTALL_HOME --disable-documentation --disable-mpiruntest --enable-parallel --enable-fieldvector-size-is-method --with-alugrid=$INSTALL_HOME/alugrid --with-alberta=$INSTALL_HOME/alberta --with-ug=$INSTALL_HOME/ug-install CXX=g++ CC=gcc CXXFLAGS=\\\"-O3 -march=native -g0 -funroll-loops -ftree-vectorize -fno-strict-aliasing -Wall\\\" CFLAGS=\\\"-O3 -march=native -g0 -funroll-loops -ftree-vectorize -fno-strict-aliasing -Wall\\\"\"
-MAKE_FLAGS=\"all\"
-" > parallel.opts
-
-# configure and build DUNE
-./dune-common*/bin/dunecontrol --module=dune-pdelab-howto --opts=parallel.opts all
-
