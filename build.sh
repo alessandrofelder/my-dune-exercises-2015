@@ -126,6 +126,5 @@ echo "CMAKE_FLAGS=\"
 git submodule init
 git submodule update
 pushd dune
-echo "Builddir: $ROOT"
-./dune-common/bin/dunecontrol --use-cmake --opts=../config.opts --module=dune-pdelab all
+./dune-common/bin/dunecontrol --use-cmake --opts=$ROOT/config.opts --module=dune-pdelab all
 popd
