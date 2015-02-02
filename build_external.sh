@@ -17,8 +17,8 @@
 # MAKE_FLAGS flags to be given to make during the build process ("-j2")
 #
 # You can disable some parts of this script by setting the variables NOBUILD_<part>,
-# where part is out of METIS, ALBERTA, ALU, UG or GRIDS (which is equivalent to the
-# former four).
+# where part is out of METIS, ALBERTA, ALU, UG, GRIDS (which is equivalent to the
+# former four) or DUNE (which disables the call to the build_exercise.sh script).
 
 
 # set the proper defaults for variables which may be set from the outside.
@@ -122,13 +122,14 @@ echo "CMAKE_FLAGS=\"
 -DCMAKE_BUILD_TYPE=Release
 \"" > config.opts
 
-# now build the Dune stack!
+# now download all the dune modules and all exercise modules
 git submodule init
 git submodule update
-pushd dune
-./dune-common/bin/dunecontrol --use-cmake --opts=$ROOT/config.opts --module=dune-pdelab all
-popd
 
 # make the other scripts provided by this module exectuable
 chmod +x build_exercise.sh
 chmod +x cleanup.sh
+
+if [ ! NOBUILD_DUNE ] ; then
+./build_exercise.sh
+fi
