@@ -1,0 +1,28 @@
+[submodule "dune/dune-common"]
+	path = dune/dune-common
+	url = http://git.dune-project.org/repositories/dune-common
+	branch = releases/2.3
+[submodule "dune/dune-geometry"]
+	path = dune/dune-geometry
+	url = http://git.dune-project.org/repositories/dune-geometry
+	branch = releases/2.3
+[submodule "dune/dune-grid"]
+	path = dune/dune-grid
+	url = http://git.dune-project.org/repositories/dune-grid
+	branch = releases/2.3
+[submodule "dune/dune-istl"]
+	path = dune/dune-istl
+	url = http://git.dune-project.org/repositories/dune-istl
+	branch = releases/2.3
+[submodule "dune/dune-localfunctions"]
+	path = dune/dune-localfunctions
+	url = http://git.dune-project.org/repositories/dune-localfunctions
+	branch = releases/2.3
+[submodule "dune/dune-typetree"]
+	path = dune/dune-typetree
+	url = http://git.dune-project.org/repositories/dune-typetree
+	branch = releases/2.3
+[submodule "dune/dune-pdelab"]
+	path = dune/dune-pdelab
+	url = http://git.dune-project.org/repositories/dune-pdelab
+	branch = releases/2.0
