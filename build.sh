@@ -128,3 +128,7 @@ git submodule update
 pushd dune
 ./dune-common/bin/dunecontrol --use-cmake --opts=$ROOT/config.opts --module=dune-pdelab all
 popd
+
+# make the other scripts provided by this module exectuable
+chmod +x build_exercise.sh
+chmod +x cleanup.sh
