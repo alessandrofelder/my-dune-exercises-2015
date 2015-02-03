@@ -130,6 +130,6 @@ git submodule update
 chmod +x build_exercise.sh
 chmod +x cleanup.sh
 
-if [ ! NOBUILD_DUNE ] ; then
+if [ ! $NOBUILD_DUNE ] ; then
 ./build_exercise.sh
 fi
