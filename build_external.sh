@@ -48,6 +48,31 @@ if [ ! "$MAKE_FLAGS" ]; then
 MAKE_FLAGS="-j2"
 fi
 
+if [ ! $NOBUILD_SUPERLU ]; then
+pushd $INSTALL_HOME
+mkdir -p superlu
+pushd superlu
+mkdir -p lib
+mkdir -p include
+popd
+pushd tarballs
+rm -rf SuperLU_4.3
+tar xzf ./superlu-4.3.tar.gz
+pushd SuperLU_4.3
+(
+cp MAKE_INC/make.linux make.inc
+sed -i "s|\$(HOME)/Codes/SuperLU_4.3|$INSTALL_HOME/superlu|g" make.inc
+make $MAKE_FLAGS all
+chmod 444 ./SRC/*.h
+cp ./SRC/*.h $INSTALL_HOME/superlu/include
+popd
+rm -rf SuperLU_4.3
+) || exit $?
+popd
+popd
+popd
+fi
+
 if [ ! $NOBUILD_GRIDS ]; then
 
 ## compile and install metis
@@ -114,6 +139,7 @@ echo "CMAKE_FLAGS=\"
 -DALBERTA_ROOT=$INSTALL_HOME/alberta
 -DALUGRID_ROOT=$INSTALL_HOME/alugrid
 -DMETIS_ROOT=$INSTALL_HOME/metis
+-DSUPERLU_ROOT=$INSTALL_HOME/superlu
 -DUG_ROOT=$INSTALL_HOME/ug
 -DCMAKE_C_COMPILER=/usr/bin/gcc
 -DCMAKE_CXX_COMPILER=/usr/bin/g++
