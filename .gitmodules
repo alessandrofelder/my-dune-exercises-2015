@@ -86,7 +86,3 @@
 	path = exercises/pdelab-exercise5
 	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise5.git
 	branch = master
-[submodule "exercises/pdelab-exercise6"]
-	path = exercises/pdelab-exercise6
-	url = http://conan2.iwr.uni-heidelberg.de/git/dune-course/pdelab-exercise6.git
-	branch = master
