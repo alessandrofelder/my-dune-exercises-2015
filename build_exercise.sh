@@ -4,7 +4,8 @@
 # present dune modules (core modules and exercise modules) are built.
 #
 # You can customize the beahviour by setting the following environment variables:
-# OPTS : the opts file to use, defaults to the generated ../config.opts
+# DEBUG_OPTS : the opts file to use for the debug build, defaults to the generated debug.opts
+# RELEASE_OPTS : the opts file to use for the debug build, defaults to the generated release.opts
 # MODULE : only build the given module and all its dependencies
 # ONLY : only build the given module. Only works with prebuilt dependent modules
 #
@@ -13,8 +14,12 @@
 #
 # To get rid of this script, read dune-common/bin/dunecontrol --help
 
-if [ ! $OPTS ] ; then
-OPTS="config.opts"
+if [ ! $DEBUG_OPTS ] ; then
+DEBUG_OPTS="debug.opts"
+fi
+
+if [ ! $RELEASE_OPTS ] ; then
+RELEASE_OPTS="release.opts"
 fi
 
 if [ $MODULE ] ; then
@@ -25,4 +30,5 @@ if [ $ONLY ] ; then
 MODSTRING="--only=$ONLY"
 fi
 
-./dune/dune-common/bin/dunecontrol $MODSTRING --use-cmake --opts=$OPTS all
+./dune/dune-common/bin/dunecontrol $MODSTRING --use-cmake --opts=$DEBUG_OPTS --builddir=debug-build all
+./dune/dune-common/bin/dunecontrol $MODSTRING --use-cmake --opts=$RELEASE_OPTS --builddir=release-build all
