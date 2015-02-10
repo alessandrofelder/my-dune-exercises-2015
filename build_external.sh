@@ -134,14 +134,17 @@ fi
 
 fi
 
+CC=$(which $CC)
+CXX=$(which $CXX)
+
 # generate an opts file with release flags
 echo "CMAKE_FLAGS=\"
 -DALBERTA_ROOT=$INSTALL_HOME/alberta
 -DALUGRID_ROOT=$INSTALL_HOME/alugrid
 -DMETIS_ROOT=$INSTALL_HOME/metis
 -DUG_ROOT=$INSTALL_HOME/ug
--DCMAKE_C_COMPILER=/usr/bin/gcc
--DCMAKE_CXX_COMPILER=/usr/bin/g++
+-DCMAKE_C_COMPILER='$CC'
+-DCMAKE_CXX_COMPILER='$CXX'
 -DCMAKE_CXX_FLAGS_RELEASE='-O3 -DNDEBUG -g0 -Wno-deprecated-declarations -funroll-loops'
 -DCMAKE_BUILD_TYPE=Release
 \"" > release.opts
@@ -152,8 +155,8 @@ echo "CMAKE_FLAGS=\"
 -DALUGRID_ROOT=$INSTALL_HOME/alugrid
 -DMETIS_ROOT=$INSTALL_HOME/metis
 -DUG_ROOT=$INSTALL_HOME/ug
--DCMAKE_C_COMPILER=/usr/bin/gcc
--DCMAKE_CXX_COMPILER=/usr/bin/g++
+-DCMAKE_C_COMPILER='$CC'
+-DCMAKE_CXX_COMPILER='$CXX'
 -DCMAKE_CXX_FLAGS_DEBUG='-O0 -ggdb -Wall'
 -DCMAKE_BUILD_TYPE=Debug
 \"" > debug.opts
